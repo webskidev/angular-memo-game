@@ -20,11 +20,11 @@ import { MemoCard } from './game-board.component';
   ],
   template: `
     @if(memo.flipped) {
-      <button class="memo">
+      <button class="memo bg-blue-400 rounded-md">
         <img class="memo-image" [src]="memo.imageUrl" />
       </button>
     } @else {
-      <button class="memo" (click)="flipMemoCard()"></button>
+      <button class="memo bg-blue-400 rounded-md" (click)="flipMemoCard()"></button>
     }
   `,
 })

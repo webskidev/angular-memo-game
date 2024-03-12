@@ -15,12 +15,16 @@ export interface MemoCard {
     ` .board { display: grid; grid-template-columns: 200px 200px; gap: 1rem } `,
   ],
   template: `
-    <button (click)="reset()">Reset</button>
-    <span>Match count: {{ matchCount() }}</span>
-    <main class="board">
-      @for(memo of memos(); track memo.id; let idx = $index) {
-          <app-memo-card [memo]="memo" (cardFlipped)="calculateMatch(idx)"></app-memo-card>
-        }
+    <main class="flex flex-col gap-2 p-4">
+      <div class="flex gap-2 items-center">
+        <button class="rounded-md bg-blue-200 px-4 py-1" (click)="reset()">Reset</button>
+        <span>Match count: {{ matchCount() }}</span>
+      </div>
+      <div class="board">
+        @for(memo of memos(); track memo.id; let idx = $index) {
+            <app-memo-card [memo]="memo" (cardFlipped)="calculateMatch(idx)"></app-memo-card>
+          }
+      </div>
     </main>
   `,
 })
@@ -62,6 +66,7 @@ export class GameBoardComponent {
 
   reset(): void {
     this.memos.set(structuredClone(this.initialMemos));
+    this.matchCount.set(0);
   }
 
   calculateMatch(cardIndex: number): void {
@@ -79,7 +84,7 @@ export class GameBoardComponent {
           this.flippedCardsCount.set(0);
         }, 1500);
       } else {
-        setTimeout(() => this.flipCardsBack(), 1500);
+        setTimeout(() => this.memos().forEach((memo) => (memo.flipped = false)), 1500);
       }
     }
   }
@@ -89,9 +94,5 @@ export class GameBoardComponent {
       const index = this.memos().findIndex((memo) => memo.id === card.id);
       this.memos().splice(index, 1);
     });
-  }
-
-  private flipCardsBack(): void {
-    this.memos().forEach((memo) => (memo.flipped = false));
   }
 }
